@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>func2</title>
+</head>
+<style>
+  #all{
+    border: 3px #00000f solid;
+    position: absolute;
+    top: 30px;
+    margin-top: 100px;
+    margin-left: 500px;
+    border-radius: 20px;
+    width: 700px;
+    height: 600px;
+    /*background-color: #6c7c86;*/
+  }
+  .leall{
+    position: absolute;
+    transition: .2s;
+    border-radius: 20px;
+    top: 130px;
+    left: 240px;
+    width: 150px;
+    height: 600px;
+    background-color: #0c80dc;
+  }
+  table{
+    position: absolute;
+    top: 100px;
+  }
+  .le{
+    width: 100px;
+    height: 50px;
+    background-color: #909ed2;
+    margin-top: 50px;
+    margin-left: 10px;
+  }
+  .btn{
+    border-radius: 10px;
+    width: 60px;
+    height: 30px;
+    margin-top: 6px;
+    margin-left: 20px;
+    background-color: black;
+    transition: .2s;
+  }
+  .btn:hover{
+    border: black 2px solid;
+    background-color: #6c7c86;
+  }
+  h3{
+    background-color: #006090;
+    border-radius: 4px;
+    width: 120px;
+    height: 25px;
+    position: absolute;
+    top: 20px;
+    left:800px;
+  }
+  td{
+    border: #6c7c86 3px solid;
+  }
+  .all-table{
+    text-align: center;
+    float: left;
+    margin-left: 100px ;
+    width: 100px;
+    height: 30px;
+    color: white;
+    background-color: black;
+    border-radius: 5px;
+    margin-top: 30px;
+  }
+  .all-table:hover{
+    color: black;
+    background-color: white;
+    width: 105px;
+    height: 36px;
+    transition: .3s;
+  }
+
+  .query_sort{
+    position: absolute;
+    top: 221px;
+    left: 100px;
+    width: 100px;
+    height: 180px;
+    color: white;
+    background: black;
+    border-radius: 10px;
+  }
+  .qu1,.qu2{
+    background-color: #6c7c86;
+    width: 80px;
+    height: 35px;
+    border-radius: 8px;
+    color: white;
+  }
+  .qu1{
+    position: absolute;
+    top: 30px;
+    right: 12px
+  }
+  .qu2{
+    position: absolute;
+    top: 90px;
+    right: 12px;
+  }
+  .qu2:hover{
+    background-color: #0c80dc;
+    transition: .3s;
+    border: black 1px solid;
+    width: 80px;
+    height: 35px;
+    border-radius: 8px;
+    color: white;
+  }
+  .qu1:hover{
+    background-color: #0c80dc;
+    transition: .3s;
+    border: black 1px solid;
+    width: 80px;
+    height: 35px;
+    border-radius: 8px;
+    color: white;
+  }
+  .show_{
+    border-radius: 5px;
+    width: 480px;
+    height: 50px;
+    background: wheat;
+    position: absolute;
+    top: 40px;
+    left:300px;
+    border: 1px solid black;
+    display: none;
+  }
+</style>
+<body>
+  <h3>机票信息系统</h3>
+<div class="leall">
+<!--  <div class="le" id="result"><button class="btn">all data</button></div>-->
+  <div class="le"><button class="btn">insert</button></div>
+  <div class="le"><button class="btn">delete </button></div>
+  <div class="le" ><button class="btn">query</button></div>
+  <div class="le" ><button class="btn">update</button></div>
+  <div class="query_sort">
+    <span class="qu1">单表查询</span>
+    <span class="qu2">多表查询</span></div>
+</div>
+
+  <div class="show_"></div>
+
+<div id="all">
+  <button class="all-table">航班基本信息</button>
+  <button class="all-table">客户基本信息</button>
+  <button class="all-table">机票信息</button>
+  <table id="tab"  style="width:600px; height: 300px;border: #6c7c86 5px solid; margin-top: 20px;margin-left: 30px">
+  </table>
+</div>
+</body>
+
+<script>
+  let databases =''
+  let btu = document.querySelectorAll('.btn')
+  let all = document.getElementById('all')
+  let table = document.getElementById('tab')
+  let tabs = document.querySelectorAll('.all-table')
+  let sort = document.querySelector('.query_sort')
+  let qu1  = document.querySelector('.qu1')
+  let qu2 = document.querySelector('.qu2')
+  qu1.style.display='none'
+  qu2.style.display = 'none'
+  sort.style.display='none'
+  let data = []
+  let press=1;
+  let f = false
+  let tr=null
+ databases = ''
+
+  btu[0].onclick = ()=>{
+    let xhr = new XMLHttpRequest()
+    xhr.responseType = 'json'//设置数据响应类型
+    let id = prompt('请输入你要插入的飞机编号:')
+    let planeName = prompt('请输入你要插入的飞机名称:')
+    let rank = prompt('请输入你要插入的机仓等级:')
+    let postStr = '?id='+id+'&planeName='+planeName+'&ran='+rank
+    console.log(postStr)
+
+    xhr.open('post', 'http://localhost:8981/mysqlInsert'+postStr)//?id=100100&planeName=air9&ran=mid
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')//设置请求头
+    //设置请求头信息
+    // location.reload()
+     xhr.send('insert')//设置请求体
+    // show()
+  }
+
+  btu[1].onclick = ()=> {  //删
+    let xhr = new XMLHttpRequest()
+    xhr.responseType = 'json'//设置数据响应类型
+    let id = prompt('请输入你要删除的飞机编号:')
+
+    let postStr = '?id=' + id
+    console.log(postStr)
+    console.log("delete时 data长度:", data.length)
+
+    xhr.open('post', 'http://localhost:8981/mysqlDelete' + postStr)//?id=100100&planeName=air9&ran=mid
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')//设置请求头
+    //设置请求头信息
+    xhr.send('delete')//设置请求体  向后端发送删除指令
+    console.log(table)
+
+  }
+  press=1
+  btu[2].onclick = ()=>{
+   if(press===1) {
+      qu1.style.display='block'
+      qu2.style.display = 'block'
+      sort.style.display='block'
+     press=0
+    }else{
+      qu1.style.display='none'
+      qu2.style.display = 'none'
+      sort.style.display='none'
+     press=1
+   }
+  }
+  qu1.onclick = ()=>{ //
+    let xhr = new XMLHttpRequest()
+    xhr.responseType = 'json'//设置数据响应类型
+    let id = prompt('请输入你要查找的飞机编号:')
+    let postStr = '?id=' + id
+
+    xhr.open('post', 'http://localhost:8981/mysqlQuery'+ postStr)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')//设置请求头
+    //设置请求头信息
+    xhr.send('query')//设置请求体  向后端发送删除指令 console.log(table)
+    let dat =null
+    console.log(dat)
+// xhr.response
+    xhr.onload = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status >= 200 && xhr.status <= 300) {
+        //  console.log(xhr.response)//手动转换
+          dat = xhr.response
+        }
+      }
+    }
+    setTimeout(()=>{
+      console.log('data',dat)
+      let show_ = document.querySelector('.show_')
+      show_.style.display = 'block'
+      show_.innerText = JSON.stringify(dat) //展示原始数据
+    },510)
+  }
+  qu2.onclick= ()=>{
+  } //多表查询未写
+  btu[3].onclick = ()=>{ //改
+    let xhr = new XMLHttpRequest()
+    xhr.responseType = 'json'//设置数据响应类型
+    let idf = prompt('请输入你要更改的飞机编号:')
+    alert('下面请输入·你要更新的信息:')
+    let id = prompt('请输入你要修改的飞机编号:')
+    let planeName = prompt('请输入你要修改的飞机名称:')
+    let rank = prompt('请输入你要修改的机仓等级:')
+    let postStr = '?id='+id+'&planeName='+planeName+'&ran='+rank+'&idf='+idf
+    //                                8090
+    xhr.open('post', 'http://localhost:8981/mysqlUpdate'+postStr)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')//设置请求头
+    //设置请求头信息
+    xhr.send('update')//设置请求体
+  }
+  //-----------------------------------------------------------------------------------------------------------------------
+  console.log(btu[0].innerHTML)
+  tabs[0].onclick = ()=>{
+    show('1') //显示数据库
+  }
+  function show(da) {
+      let xhr = new XMLHttpRequest()
+      xhr.responseType = 'json'//设置数据响应类型
+      //   类型     url                       8090        8981
+      xhr.open('post', 'http://localhost:8981/mysqlPost')//?id=911199&planeName=air10&ran=mid
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')//设置请求头
+      //设置请求头信息
+      xhr.send(da)
+      //发送请求
+      xhr.onload = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status >= 200 && xhr.status <= 300) {
+            console.log("i get it")
+            console.log(xhr.response)//手动转换
+            data = xhr.response
+
+            console.log(data)
+          }
+        }
+      }
+    console.log(data)
+  setTimeout(() => {
+      let trad = document.createElement('tr')
+      trad.innerHTML = '<td>' + '飞机编号' + '</td><td>' + '飞机名称' + '</td><td>' + '机场等级' + '</td>'
+      table.appendChild(trad)
+
+      for (let i = 0; i < data.length; i++) {
+        let tradd = document.createElement('tr')
+        tradd.innerHTML = '<td>' + (data[i].id) + '</td><td>' + (data[i].planeName) + '</td><td>' + (data[i].ran) + '</td>'
+        table.appendChild(tradd)
+      }
+  }, 500)
+
+  tr = table.children
+  console.log(tr)
+}
+//--------------------------------------------------------------
+
+</script>
+</html>

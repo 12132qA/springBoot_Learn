@@ -1,0 +1,102 @@
+<!DOCTYPE >
+<html>
+<html lang="ch">
+<head>
+  <meta charset="utf-8">
+  <title>登录</title>
+
+</head>
+<style>
+  #userid{
+    position: fixed;
+    top: 320px;
+    left: 600px;
+    width: 170px;
+    height: 50px;
+    border: #00000f solid 2px;
+  }
+#password{
+  position: fixed;
+  top: 400px;
+  left: 600px;
+
+  width: 170px;
+  height: 50px;
+  border: #00000f solid 2px;
+}
+div{
+  position: fixed;
+  display: flex;
+  top: 220px;
+  left: 600px;
+  flex-direction: row;
+  justify-content: center;
+  width: 170px;
+  height: 50px;
+}
+
+</style>
+
+<body>
+    <div>
+      <span><h2>登录</h2></span>
+    </div>
+    <input id="userid" value="" placeholder="用户名">
+    <input id="password" value="" placeholder="密码">
+</body>
+<script>
+  let id = document.getElementById("userid")
+  let password = document.getElementById("password")
+  password.addEventListener('blur',()=>{
+    let idl = id.value
+    let word = password.value
+     main(idl,word)
+    console.log(idl,word)
+    alert(idl+"..."+word)
+  })
+
+  let res =  0;
+  function sendAJAX(text,word) {
+    let str ='?userid='+text+'&password='+word
+    //  http://localhost:8970/api/user
+    // http://192.168.64.219:8080/Servlet_war_exploded/
+    //http://localhost:8090/?type=all
+    // http https
+    //  http://192.168.64.219:8080/Servlet_war_exploded/com.servlet.Entrance?type=all
+    let url = 'http://localhost:8981/mysqlLogin'+str
+    let x = new XMLHttpRequest()
+    return new Promise((resolve,reject) => {
+      x.open('get',url) // post请求 /get 请求
+      x.send()
+      // 事件绑定
+      x.onreadystatechange = function (){
+        if(x.readyState===4){
+          if(x.status>=200&&x.status<300){
+            resolve(x.response)
+            console.log(x.response+'.......')
+          }else{
+            console.log(JSON.parse(x.response))
+            reject(x.status)
+          }
+        }
+      }
+    })
+  }
+  async function main(text,word) {
+    // 发送ajax请求
+      console.log(text,word)
+    res = await sendAJAX(text,word)
+    if(res==='1'){
+      alert("登录成功")
+    }else if(res==='0'){
+      alert("登录失败 密码错误")
+    }else{
+        alert("您无用户 请重新登录 或 您输入错误")
+    }
+    console.log(res)
+    // res = JSON.parse(res)
+    // console.log(typeof res)
+  }
+
+</script>
+</html>

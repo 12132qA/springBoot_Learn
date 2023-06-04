@@ -1,0 +1,7 @@
+
+parent 定义了若干依赖管理
+                   版本依赖管理
+
+
+引导类 application
+
